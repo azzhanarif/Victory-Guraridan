@@ -44,8 +44,6 @@ int main(){
 
             bullets.push_back(Bullet(hero.x,hero.y,dx,dy));
         }
-            
-
 
         // -- updating the bullets --
         for(int i = 0; i < bullets.size() ; i++){ 
@@ -57,8 +55,11 @@ int main(){
                     bullets[i].active = false;
                 }
             }
-
         }
+
+        // -- updating the enemy --
+
+        
 
     }
 

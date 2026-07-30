@@ -11,3 +11,9 @@ Bullet::Bullet(float sX,float sY, float dx,float dy){
     active = true;
 
 }
+
+void Bullet::update(){
+
+    startX += x;
+    startY += y;
+}
