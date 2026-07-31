@@ -24,6 +24,16 @@ void Plant::takeDamage(int damage) {
 
 void Plant::updateGrowth() {
 	//working on it ismay gndi logic hai frames wali :( // Abhee beshak sfml use na kar, logic banjaye uske baad end pai karlengay araam sai 
+	//ok kar
+	if (currentHealth > 0) {
+		growthPct += 0.01f; // Increase growth percentage by 1% per update
+		if (growthPct > 1.0f) {
+			growthPct = 1.0f; // Cap growth percentage at 100%
+		}
+	}
+	else {
+		growthPct = 0.0f; // If the plant is dead, reset growth percentage
+	}
 }
 
 sf::Vector2f Plant::getPosition() {   // this is also built in sfml to return cord
