@@ -2,12 +2,15 @@
 
 struct Enemy{
 
+    std::string name;
     int health;
-    int x;
-    int y;
+    float x;
+    float y;
     bool alive;
+    float speed;
 
-    Enemy(int spawnX,int spawnY,int hth);
+    Enemy(std::string n,float spawnX,float spawnY,int hth,float spd);
     void update();
+    static Enemy spawn();
 
 };

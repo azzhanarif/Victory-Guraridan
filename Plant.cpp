@@ -23,7 +23,7 @@ void Plant::takeDamage(int damage) {
 }
 
 void Plant::updateGrowth() {
-	//working on it ismay gndi logic hai frames wali :(
+	//working on it ismay gndi logic hai frames wali :( // Abhee beshak sfml use na kar, logic banjaye uske baad end pai karlengay araam sai 
 }
 
 sf::Vector2f Plant::getPosition() {   // this is also built in sfml to return cord

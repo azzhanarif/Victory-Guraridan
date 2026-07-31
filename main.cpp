@@ -3,11 +3,18 @@
 #include <cmath>
 #include <vector>
 #include "bullet.h"
+#include "enemy.h"
+#include <cstdlib>
+#include <ctime>
+
 
 int main(){
 
+    srand(time(0));
+
     Player hero;
     std::vector<Bullet> bullets; //it works like a python list
+    std::vector<Enemy> enemies;
 
     // -- game loop --
     while(true){
@@ -45,6 +52,14 @@ int main(){
             bullets.push_back(Bullet(hero.x,hero.y,dx,dy));
         }
 
+        // -- spawming enemy
+
+        if ((rand() % 100) < 40) { // 40% spawn rate
+            enemies.push_back(Enemy::spawn());
+        }
+
+
+
         // -- updating the bullets --
         for(int i = 0; i < bullets.size() ; i++){ 
 
@@ -59,7 +74,10 @@ int main(){
 
         // -- updating the enemy --
 
-        
+        for(int i = 0 ; i < enemies.size() ; i++){
+            enemies[i].update();
+        }
+
 
     }
 
