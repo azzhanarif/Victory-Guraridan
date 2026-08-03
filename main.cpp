@@ -4,7 +4,8 @@
 #include <vector>
 #include "bullet.h"
 #include "enemy.h"
-#include"Plant.h"
+#include "Plant.h"
+#include "fence.h"
 #include <cstdlib>
 #include <ctime>
 
@@ -19,8 +20,9 @@ int main() {
     Player hero;
     std::vector<Bullet> bullets; //it works like a python list
     std::vector<Enemy> enemies;
+    std::vector<Fence> fences;
 
-    Plant SuccessPlant();  //created the plant with 100 health
+    Plant SuccessPlant(100); //created the plant with 100 health
 
     // -- game loop --
     while (true) {
@@ -37,6 +39,10 @@ int main() {
         else if (input == 'i') bullets.push_back(Bullet(hero.x, hero.y, 0.0f, 1.0f));
         else if (input == 'k') bullets.push_back(Bullet(hero.x, hero.y, 0.0f, -1.0f));
         else if (input == 'j') bullets.push_back(Bullet(hero.x, hero.y, -1.0f, 0.0f));
+        else if (input == 'b') { // 3. Build fence input ('b')
+            fences.push_back(Fence(hero.x, hero.y));
+            std::cout << "Fence placed at (" << hero.x << ", " << hero.y << ")!\n";
+        }
         else if (input == 'f') {
 
             float xx;
@@ -75,6 +81,15 @@ int main() {
                 if (bullets[i].x >= 20.0f | bullets[i].y >= 20.0f | bullets[i].x <= -20.0f | bullets[i].y <= -20.0f) { // 20x20 limit
                     bullets[i].active = false;
                 }
+            }
+        }
+       
+        for (size_t i = 0; i < fences.size(); ) {
+            if (fences[i].isDestroyed()) {
+                fences.erase(fences.begin() + i);
+            }
+            else {
+                i++;
             }
         }
 

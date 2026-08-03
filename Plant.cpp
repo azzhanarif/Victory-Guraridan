@@ -1,53 +1,32 @@
-#include "Plant.h";
+#include "Plant.h"
 
-Plant::Plant(int maxHealth) {
-	maximumHealth = maxHealth;
-	currentHealth = maxHealth;
-	growthPct = 0.0f;
-	body.setRadius(10.0f); 
-	body.setFillColor(sf::Color::Green); 
-	int windowWidth = 800; // we can change this to the actual widht
-	int windowHeight = 600;
-	body.setPosition(windowWidth / 2.0f, windowHeight / 2.0f);
-}
-
-void Plant::draw(sf::RenderWindow& window) {
-	window.draw(body);  // ye sb built in hai game loop will run it
+Plant::Plant(int health, float posX, float posY)
+    : maximumHealth(health), currentHealth(health), growthPct(0.0f), x(posX), y(posY) {
 }
 
 void Plant::takeDamage(int damage) {
-	currentHealth -= damage;
-	if (currentHealth < 0) {
-		currentHealth = 0;
-	}
+    currentHealth -= damage;
+    if (currentHealth < 0) {
+        currentHealth = 0;
+    }
 }
 
 void Plant::updateGrowth() {
-	//working on it ismay gndi logic hai frames wali :( // Abhee beshak sfml use na kar, logic banjaye uske baad end pai karlengay araam sai 
-	//ok kar
-	if (currentHealth > 0) {
-		growthPct += 0.01f; // Increase growth percentage by 1% per update
-		if (growthPct > 1.0f) {
-			growthPct = 1.0f; // Cap growth percentage at 100%
-		}
-	}
-	else {
-		growthPct = 0.0f; // If the plant is dead, reset growth percentage
-	}
+    if (currentHealth > 0) {
+        growthPct += 0.01f;
+        if (growthPct > 100.0f) {
+            growthPct = 100.0f;
+        }
+    }
+    else {
+        growthPct = 0.0f;
+    }
 }
 
-sf::Vector2f Plant::getPosition() {   // this is also built in sfml to return cord
-	return body.getPosition();
-}
+float Plant::getX() const { return x; }
+float Plant::getY() const { return y; }
+bool Plant::isDead() const { return currentHealth <= 0; }
 
-std::string Plant::getStatus() {
-	if (currentHealth == 0) {
-		return "dead";
-	}
-	else if (currentHealth < maximumHealth / 2) {
-		return "damaged";
-	}
-	else {
-		return "healthy";
-	}
+std::string Plant::getStatus() const {
+    return "Health: " + std::to_string(currentHealth) + " | Growth: " + std::to_string(growthPct) + "%";
 }

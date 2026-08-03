@@ -1,26 +1,22 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-class Plant
-{
+#include <string>
+
+class Plant {
 private:
-	int currentHealth;
-	int maximumHealth;
-	float growthPct; 
-	sf::CircleShape body; // It SFML Built In Var which is the plant's visual representation
+    int maximumHealth;
+    int currentHealth;
+    float growthPct;
+    float x;
+    float y;
+
 public:
-	void draw(sf::RenderWindow& window) {// Render window batata hai window pe draw kro
-		// draw the plant on the screen
-	}
-	void takeDamage(int damage) {
-		//detemines the damage taken
-	}
-	void updateGrowth() {
-	
-	}
-	sf::Vector2f getPosition() {
-		// return the position of the plant
-	}
-	std::string getStatus() {
-		// return the status of the plant (e.g. healthy, damaged, dead)
-	}
+    Plant(int health = 100, float posX = 0.0f, float posY = 0.0f);
+
+    void takeDamage(int damage);
+    void updateGrowth();
+
+    float getX() const;
+    float getY() const;
+    bool isDead() const;
+    std::string getStatus() const;
 };
