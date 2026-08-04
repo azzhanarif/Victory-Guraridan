@@ -28,6 +28,8 @@ Enemy Enemy::spawn(){
     struct EnemyInfo {
         int health;
         float speed;
+        float rate;
+        float damage;
     };
 
     static std::unordered_map<std::string,EnemyInfo> enemyPowers = {
@@ -51,7 +53,7 @@ Enemy Enemy::spawn(){
     
     randName = enemyNames[choice];
     EnemyInfo info = enemyPowers[randName]; 
-    return Enemy(randName,spawnX,spawnY,info.health,info.speed);
+    return Enemy(randName,spawnX,spawnY,info.health,info.speed,info.rate,info.damage);
 
     
 }
