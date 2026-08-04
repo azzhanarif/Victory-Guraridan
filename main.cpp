@@ -9,10 +9,6 @@
 #include <cstdlib>
 #include <ctime>
 
-
-
-
-
 int main() {
 
     srand(time(0));
@@ -25,6 +21,7 @@ int main() {
     Plant SuccessPlant(100); //created the plant with 100 health
 
     // -- game loop --
+
     while (true) {
 
         char input;
@@ -61,7 +58,7 @@ int main() {
             dx = dx / distance;
             dy = dy / distance;
 
-            bullets.push_back(Bullet(hero.x, hero.y, dx, dy));
+            bullets.push_back(Bullet(hero.x,hero.y,dx,dy));// ERROR ======>>> need to add damage and speedRate parameters here
         }
 
         // -- spawming enemy
@@ -101,6 +98,47 @@ int main() {
 
         SuccessPlant.updateGrowth(); // Update the growth of the plant
         std::cout << "Plant Status: " << SuccessPlant.getStatus() << std::endl;
+
+
+
+        // -- bullets hitting the enemy logic --
+
+        for(int i = 0 ; i < bullets.size() ; i++){
+            if(!bullets[i].active) continue;
+            for(int j = 0 ; j < enemies.size() ; j++){
+                if(!enemies[j].alive) continue;
+                //calculate distance between enemy and the bullet
+               float disX = enemies[j].x - bullets[i].x;
+               float disY = enemies[j].y - bullets[i].y;
+
+               float dis = (disX * disX) + (disY * disY);
+
+                if(dis < 1.0f){ //1.0f is my threshold for hitting the bullet
+
+                  bullets[i].active = false;
+                  enemies[j].health -= 50; // -= bullets[i].damage
+
+                  if(enemies[j].health <= 0){
+                    std::cout << enemies[j].name << " Destroyed!\n";
+                    enemies[i].alive = false;
+                  }
+                 break;
+               }
+            }
+        }
+
+        // removing dead eneimies and bullts from the vector array
+
+        bullets.erase(
+           std::remove_if(bullets.begin(), bullets.end(), [](const Bullet& b) { return !b.active; }),
+           bullets.end()
+        );
+
+        enemies.erase(
+           std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& e) { return !e.alive; }),
+            enemies.end()
+        );
+
     }
     
 

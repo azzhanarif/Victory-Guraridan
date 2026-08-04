@@ -5,7 +5,7 @@
 #include<vector>
 #include<cmath>
 
-Enemy::Enemy(std::string n, float spawnX ,float spawnY,int hth,float spd){
+Enemy::Enemy(std::string n, float spawnX ,float spawnY,int hth,float spd, float rate, float dmg){
 
     name = n;
     health = hth    ;
@@ -32,11 +32,11 @@ Enemy Enemy::spawn(){
 
     static std::unordered_map<std::string,EnemyInfo> enemyPowers = {
 
-        {"Doom Scrolling",{50,0.5f}},
-        {"Procrastination",{200,0.2f}},
-        {"Random Distraction",{20,1.5f}},
-        {"No Sleeper",{250,0.1f}},
-        {"Junk Food",{100,1.0f}}
+        {"Doom Scrolling",{50,0.5f,1.5f,30}},
+        {"Procrastination",{200,0.2f,4,50}},
+        {"Random Distraction",{20,1.5f,1.0f,20}},
+        {"No Sleeper",{250,0.1f,5.0f,70}},
+        {"Junk Food",{100,1.0f,3.0f,50}}
     };
 
     // setting up the spawn point
