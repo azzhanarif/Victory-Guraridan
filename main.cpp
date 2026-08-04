@@ -8,21 +8,54 @@
 #include "fence.h"
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
+#include "gun.h"
 
 int main() {
 
     srand(time(0));
 
-    Player hero;
+
+    GunInfo defaultName = gunDictionary["Pistol"];
+    gun defaultWepon("Pistol", defaultName.speed , defaultName.damage, defaultName.fireRate );
+    Player hero(defaultWepon);
+
+
+
     std::vector<Bullet> bullets; //it works like a python list
     std::vector<Enemy> enemies;
     std::vector<Fence> fences;
+
+    int spawnRate = 20; // level 1 enemies spawn rate
+    float roundCounter = 0; // counts every 1/60 of a second and keeps track of time passing
+
 
     Plant SuccessPlant(100); //created the plant with 100 health
 
     // -- game loop --
 
     while (true) {
+
+        // checks the level
+
+        if(roundCounter >= 60 && roundCounter < 120 && hero.level == 1) {
+            hero.level++;
+            hero.gunLevel();
+            spawnRate += 15;
+        }
+        else if (roundCounter >= 120 && roundCounter < 240 && hero.level == 2) {
+            hero.level++;
+            hero.gunLevel();
+            spawnRate += 15;
+        }
+        else if (roundCounter >= 240 && roundCounter < 360 && hero.level == 3) {
+            hero.level++;
+            hero.gunLevel();
+            spawnRate += 15;
+        }
+        else if (roundCounter >= 360 && hero.level == 4) {
+            break; 
+        }
 
         char input;
         std::cin >> input;
@@ -31,11 +64,11 @@ int main() {
 
         if (input == 'w' | input == 'a' | input == 's' | input == 'd') {
             hero.move(input);
-        }
-        else if (input == 'l') bullets.push_back(Bullet(hero.x, hero.y, 1.0f, 0.0f)); // everytime a bullet is created it is stored into vector bullets
-        else if (input == 'i') bullets.push_back(Bullet(hero.x, hero.y, 0.0f, 1.0f));
-        else if (input == 'k') bullets.push_back(Bullet(hero.x, hero.y, 0.0f, -1.0f));
-        else if (input == 'j') bullets.push_back(Bullet(hero.x, hero.y, -1.0f, 0.0f));
+        }                                                               //damage, fireRate, speed
+        else if (input == 'l') bullets.push_back(Bullet(hero.x, hero.y, 1.0f, 0.0f, hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed)); // everytime a bullet is created it is stored into vector bullets
+        else if (input == 'i') bullets.push_back(Bullet(hero.x, hero.y, 0.0f, 1.0f, hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));
+        else if (input == 'k') bullets.push_back(Bullet(hero.x, hero.y, 0.0f, -1.0f, hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));
+        else if (input == 'j') bullets.push_back(Bullet(hero.x, hero.y, -1.0f, 0.0f, hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));
         else if (input == 'b') { // 3. Build fence input ('b')
             fences.push_back(Fence(hero.x, hero.y));
             std::cout << "Fence placed at (" << hero.x << ", " << hero.y << ")!\n";
@@ -58,12 +91,12 @@ int main() {
             dx = dx / distance;
             dy = dy / distance;
 
-            bullets.push_back(Bullet(hero.x,hero.y,dx,dy));// ERROR ======>>> need to add damage and speedRate parameters here
+            bullets.push_back(Bullet(hero.x,hero.y,dx,dy,hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));// ERROR ======>>> need to add damage and speedRate parameters here
         }
 
         // -- spawming enemy
 
-        if ((rand() % 100) < 40) { // 40% spawn rate
+        if ((rand() % 100) < spawnRate) { //spawn rate
             enemies.push_back(Enemy::spawn());
         }
 
@@ -80,7 +113,7 @@ int main() {
                 }
             }
         }
-       
+       // -- fence logic 
         for (size_t i = 0; i < fences.size(); ) {
             if (fences[i].isDestroyed()) {
                 fences.erase(fences.begin() + i);
@@ -116,11 +149,11 @@ int main() {
                 if(dis < 1.0f){ //1.0f is my threshold for hitting the bullet
 
                   bullets[i].active = false;
-                  enemies[j].health -= 50; // -= bullets[i].damage
+                  enemies[j].health -= bullets[i].damage;
 
                   if(enemies[j].health <= 0){
                     std::cout << enemies[j].name << " Destroyed!\n";
-                    enemies[i].alive = false;
+                    enemies[j].alive = false;
                   }
                  break;
                }
@@ -138,6 +171,8 @@ int main() {
            std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& e) { return !e.alive; }),
             enemies.end()
         );
+
+        roundCounter += 0.0166f; // +1 on every passing 1 second (loop runs 60 times a second)
 
     }
     
