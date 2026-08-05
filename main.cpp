@@ -14,7 +14,7 @@
 int main() {
 
     srand(time(0));
-
+ 
 
     GunInfo defaultName = gunDictionary["Pistol"];
     gun defaultWepon("Pistol", defaultName.speed , defaultName.damage, defaultName.fireRate );

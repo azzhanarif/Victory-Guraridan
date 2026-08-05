@@ -19,6 +19,10 @@ Enemy::Enemy(std::string n, float spawnX ,float spawnY,int hth,float spd, float 
     attackTimer = 0.0f; 
 }
 
+void Enemy::attackBase(){
+// to be filled by mufleh ahmed choda prp
+}
+
 void Enemy::update() {
 
     float disX = 0 - x; 
