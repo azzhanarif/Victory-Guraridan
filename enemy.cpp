@@ -6,17 +6,42 @@
 #include<cmath>
 
 Enemy::Enemy(std::string n, float spawnX ,float spawnY,int hth,float spd, float rate, float dmg){
-
     name = n;
-    health = hth    ;
+    health = hth;
     alive = true;
     x = spawnX;
     y = spawnY;
     speed = spd;
+    
+    attackRate = rate;
+    attackDamage = dmg;
+    
+    attackTimer = 0.0f; 
 }
 
 void Enemy::update() {
 
+    float disX = 0 - x; 
+    float disY = 0 - y;
+    float dis = std::sqrt((disX * disX) + (disY * disY));
+
+    if (dis > speed) {
+        x -= (disX / dis) * speed;
+        y -= (disY / dis) * speed;
+    } 
+    else {
+        x = 0;
+        y = 0;
+
+        attackTimer += 0.0166f; 
+
+        if (attackTimer >= attackRate) {
+            
+            attackBase(); 
+            
+            attackTimer = 0.0f; 
+        }
+    }
 }
 
 Enemy Enemy::spawn(){

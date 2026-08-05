@@ -6,9 +6,11 @@ struct Bullet {
     float startY;
     float x;
     float y;
+    float damage;
     bool active;
-
-    Bullet(float sX,float sY, float dx,float dy);
+    float fireRate;
+    float speed;
+    Bullet(float sX,float sY, float dx,float dy, float dmg, float fr, float spd);
     void update();
     
 };

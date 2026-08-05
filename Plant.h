@@ -19,4 +19,5 @@ public:
     float getY() const;
     bool isDead() const;
     std::string getStatus() const;
+    
 };

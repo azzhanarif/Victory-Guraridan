@@ -1,4 +1,4 @@
-#include "Fence.h"
+#include "fence.h"
 
 Fence::Fence(float posX, float posY, int hp)
     : x(posX), y(posY), health(hp) {

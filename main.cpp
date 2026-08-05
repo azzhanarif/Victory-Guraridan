@@ -36,7 +36,7 @@ int main() {
 
     while (true) {
 
-        // checks the level
+        // -- checks the level --
 
         if(roundCounter >= 60 && roundCounter < 120 && hero.level == 1) {
             hero.level++;
