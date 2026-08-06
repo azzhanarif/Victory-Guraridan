@@ -10,6 +10,8 @@
 #include <ctime>
 #include <algorithm>
 #include "gun.h"
+#include<SFML/Graphics.hpp>
+#include<SFML/Audio.hpp>
 
 int main() {
 
@@ -20,6 +22,12 @@ int main() {
     gun defaultWepon("Pistol", defaultName.speed , defaultName.damage, defaultName.fireRate );
     Player hero(defaultWepon);
 
+    sf::RenderWindow window(sf::VideoMode(800,600),"Victory Guardian");
+    window.setFramerateLimit(60);
+
+    sf::RectangleShape playerSprite(sf::Vector2f(20.0f, 20.0f));
+    playerSprite.setFillColor(sf::Color::Green);
+    playerSprite.setOrigin(10.0f, 10.0f);
 
 
     std::vector<Bullet> bullets; //it works like a python list
@@ -62,7 +70,7 @@ int main() {
 
         if (input == 'q') break;
 
-        if (input == 'w' | input == 'a' | input == 's' | input == 'd') {
+        if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
             hero.move(input);
         }                                                               //damage, fireRate, speed
         else if (input == 'l') bullets.push_back(Bullet(hero.x, hero.y, 1.0f, 0.0f, hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed)); // everytime a bullet is created it is stored into vector bullets
