@@ -228,7 +228,7 @@ int main() {
             window.draw(bulletsSprite);
         }
 
-        // -- Drawing enemy -- 
+        // -- Drawing hero -- 
         
         float screenX = centreX + (hero.x * 20.0f);
         float screenY = centreY + (hero.y * 20.0f);
