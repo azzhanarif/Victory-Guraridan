@@ -1,4 +1,7 @@
 .vs/
 build/
+.vscode/
+.Victory-Guraridan/
+.x64/Debug.
 
 
