@@ -25,7 +25,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(800,600),"Victory Guardian");
     window.setFramerateLimit(60);
 
-    sf::RectangleShape playerSprite(sf::Vector2f(20.0f, 20.0f));
+    sf::RectangleShape playerSprite(sf::Vector2f(20.0f, 20.0f)); // a 20x20 green square sprite
     playerSprite.setFillColor(sf::Color::Green);
     playerSprite.setOrigin(10.0f, 10.0f);
 
@@ -42,7 +42,7 @@ int main() {
 
     // -- game loop --
 
-    while (true) {
+    while (window.isOpen()) {
 
         // -- checks the level --
 
@@ -68,39 +68,37 @@ int main() {
         char input;
         std::cin >> input;
 
-        if (input == 'q') break;
+        // -- walking mechanics --
+        hero.move();
 
-        if (input == 'w' || input == 'a' || input == 's' || input == 'd') {
-            hero.move(input);
-        }                                                               //damage, fireRate, speed
-        else if (input == 'l') bullets.push_back(Bullet(hero.x, hero.y, 1.0f, 0.0f, hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed)); // everytime a bullet is created it is stored into vector bullets
-        else if (input == 'i') bullets.push_back(Bullet(hero.x, hero.y, 0.0f, 1.0f, hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));
-        else if (input == 'k') bullets.push_back(Bullet(hero.x, hero.y, 0.0f, -1.0f, hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));
-        else if (input == 'j') bullets.push_back(Bullet(hero.x, hero.y, -1.0f, 0.0f, hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));
-        else if (input == 'b') { // 3. Build fence input ('b')
-            fences.push_back(Fence(hero.x, hero.y));
-            std::cout << "Fence placed at (" << hero.x << ", " << hero.y << ")!\n";
-        }
-        else if (input == 'f') {
+        // -- firing mechanics --
+        if (input == 'f') {
 
             float xx;
             float yy;
-            std::cout << "Enter the specific direction you want your bullet to go\nEnter x: ";
+            std::cout << "Enter the specific direction you want your bullet to go\nEnter x: "; 
             std::cin >> xx;
             std::cout << "Enter y: ";
             std::cin >> yy;
-
+            
             // calculating distance
             float dx = xx - hero.x;
-            float dy = yy - hero.y;
+            float dy = yy - hero.y; 
 
             float distance = sqrt((dx * dx) + (dy * dy));
 
             dx = dx / distance;
             dy = dy / distance;
 
-            bullets.push_back(Bullet(hero.x,hero.y,dx,dy,hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));// ERROR ======>>> need to add damage and speedRate parameters here
+            bullets.push_back(Bullet(hero.x,hero.y,dx,dy,hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));
         }
+
+
+        if (input == 'b') { // 3. Build fence input ('b')
+            fences.push_back(Fence(hero.x, hero.y));
+            std::cout << "Fence placed at (" << hero.x << ", " << hero.y << ")!\n";
+        }
+
 
         // -- spawming enemy
 
