@@ -2,6 +2,8 @@
 #include <iostream>
 #include <unordered_map>
 #include "gun.h"
+#include<SFML/Graphics.hpp>
+#include<cmath>
 
 
 Player::Player(gun mygun ): getGun(mygun) { 
@@ -13,16 +15,23 @@ Player::Player(gun mygun ): getGun(mygun) {
 
 }
 
-void Player::move(char dir){
+void Player::move(){
 
+    float dx = 0.0f;
+    float dy = 0.0f;
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) dy -= 1.0f;
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) dx -= 1.0f;
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) dy += 1.0f;
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) dx += 1.0f;
 
-    if (dir == 'w') y+= 1.0f;
-    if (dir == 's') y-= 1.0f;
-    if (dir == 'd') x+= 1.0f;
-    if (dir == 'a') x-= 1.0f;
+    if(dx != 0 || dy != 0){
+        float dis = std::sqrt((dx*dx) + (dy*dy));
+        dx = dx/dis;
+        dy = dy/dis;
+    }
 
-    std::cout << "PLayer moved to coordinate ("<< x << "," << y << ")" << std::endl;
-
+    x += dx * 0.15;
+    y += dy * 0.15;
 }
 
 void Player::gunLevel(){

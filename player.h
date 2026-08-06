@@ -8,7 +8,7 @@ struct Player {
     float focusPoints;
     int level;
     Player(gun mygun);
-    void move(char direction);
+    void move();
     gun getGun;
     void gunLevel();
 
