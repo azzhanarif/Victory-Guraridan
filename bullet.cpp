@@ -1,5 +1,6 @@
 #include<iostream>
 #include"bullet.h"
+#include<cmath>
 
 Bullet::Bullet(float sX,float sY, float dx,float dy,float dmg, float fr, float spd){
 
@@ -16,6 +17,7 @@ Bullet::Bullet(float sX,float sY, float dx,float dy,float dmg, float fr, float s
 
 void Bullet::update(){
 
-    startX += x;
-    startY += y;
+        startX += x * speed;
+        startY += y * speed;
+
 }

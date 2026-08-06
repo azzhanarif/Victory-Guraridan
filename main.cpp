@@ -22,7 +22,7 @@ int main() {
     gun defaultWepon("Pistol", defaultName.speed , defaultName.damage, defaultName.fireRate );
     Player hero(defaultWepon);
 
-    sf::RenderWindow window(sf::VideoMode(800,600),"Victory Guardian");
+    sf::RenderWindow window(sf::VideoMode(800,800),"Victory Guardian");
     window.setFramerateLimit(60);
 
     sf::RectangleShape playerSprite(sf::Vector2f(20.0f, 20.0f)); // a 20x20 green square sprite
@@ -35,14 +35,27 @@ int main() {
     std::vector<Fence> fences;
 
     int spawnRate = 20; // level 1 enemies spawn rate
-    float roundCounter = 0; // counts every 1/60 of a second and keeps track of time passing
+
+
+    float roundCounter = 0.0f; // counts every 1/60 of a second and keeps track of time passing
+    float fenceCoolDown = 0.0f; 
+    float fireCounter = 0.0f;
 
 
     Plant SuccessPlant(100); //created the plant with 100 health
 
+    float centreX = window.getSize().x /2.0f;
+    float centreY = window.getSize().y /2.0f;
+
+
     // -- game loop --
 
     while (window.isOpen()) {
+
+         sf::Event event;
+        while (window.pollEvent(event)) {
+             if (event.type == sf::Event::Closed) window.close();
+        }
 
         // -- checks the level --
 
@@ -65,38 +78,41 @@ int main() {
             break; 
         }
 
-        char input;
-        std::cin >> input;
-
         // -- walking mechanics --
         hero.move();
 
+
         // -- firing mechanics --
-        if (input == 'f') {
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 
-            float xx;
-            float yy;
-            std::cout << "Enter the specific direction you want your bullet to go\nEnter x: "; 
-            std::cin >> xx;
-            std::cout << "Enter y: ";
-            std::cin >> yy;
-            
-            // calculating distance
-            float dx = xx - hero.x;
-            float dy = yy - hero.y; 
+            if(fireCounter >= hero.getGun.hitRate){
 
-            float distance = sqrt((dx * dx) + (dy * dy));
 
-            dx = dx / distance;
-            dy = dy / distance;
+                sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 
-            bullets.push_back(Bullet(hero.x,hero.y,dx,dy,hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));
+                
+                
+                float dx = ((mousePosition.x - centreX)/20.0f) - hero.x;
+                float dy = ((mousePosition.y - centreY)/20.0f) - hero.y;
+
+                float dis = std::sqrt((dx * dx) + (dy * dy));
+
+                dx = dx/dis;
+                dy = dy/dis;
+                                                   
+                bullets.push_back(Bullet(hero.x,hero.y,dx,dy,hero.getGun.damage,hero.getGun.hitRate,hero.getGun.speed));
+                fireCounter = 0.0f;
+
+            }
+
         }
 
 
-        if (input == 'b') { // 3. Build fence input ('b')
+        // -- fence mechanics -- 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::F) && fenceCoolDown > 0.5) { // 3. Build fence input ('b')
             fences.push_back(Fence(hero.x, hero.y));
             std::cout << "Fence placed at (" << hero.x << ", " << hero.y << ")!\n";
+            fenceCoolDown  = 0.0f; // resetting the cooldown
         }
 
 
@@ -109,17 +125,17 @@ int main() {
 
 
         // -- updating the bullets --
-        for (int i = 0; i < bullets.size(); i++) {
 
+        for (int i = 0; i < bullets.size(); i++) {
             if (bullets[i].active) {
                 bullets[i].update();
-
-                if (bullets[i].x >= 20.0f | bullets[i].y >= 20.0f | bullets[i].x <= -20.0f | bullets[i].y <= -20.0f) { // 20x20 limit
+                if (bullets[i].x >= 20.0f || bullets[i].y >= 20.0f || bullets[i].x <= -20.0f || bullets[i].y <= -20.0f) { 
                     bullets[i].active = false;
                 }
             }
         }
-       // -- fence logic 
+
+        // -- fence logic 
         for (size_t i = 0; i < fences.size(); ) {
             if (fences[i].isDestroyed()) {
                 fences.erase(fences.begin() + i);
@@ -129,8 +145,8 @@ int main() {
             }
         }
 
-        // -- updating the enemy --
 
+        // -- updating the enemy --
         for (int i = 0; i < enemies.size(); i++) {
             enemies[i].update();
         }
@@ -178,7 +194,50 @@ int main() {
             enemies.end()
         );
 
+
+        //=============================================
+        //=             Design and art                = 
+        //=============================================
+
+        window.clear(sf::Color::Black);
+
+        // --  Drawing Enemy --
+
+        sf::RectangleShape enemySprites(sf::Vector2f(20.0f,20.0f));
+        enemySprites.setFillColor(sf::Color::Red);
+        enemySprites.setOrigin(10.f,10.0f);
+        for(int i = 0 ; i < enemies.size() ; i++){
+            float eScreenX = centreX + (enemies[i].x * 20.0f);
+            float eScreenY = centreY + (enemies[i].y * 20.0f);
+            enemySprites.setPosition(eScreenX, eScreenY);
+            window.draw(enemySprites);
+        }
+
+        // --  Drawing Bullets --
+
+        sf::CircleShape bulletsSprite(3.0f);
+        bulletsSprite.setFillColor(sf::Color::Yellow);
+        bulletsSprite.setOrigin(3.0f,3.0f);
+        for (int i = 0; i < bullets.size(); i++) {
+            float bScreenx = centreX + (bullets[i].x * 20.0f);
+            float bScreenY = centreY + (bullets[i].y * 20.0f);
+            bulletsSprite.setPosition(bScreenx,bScreenY);
+            window.draw(bulletsSprite);
+        }
+
+        // -- Drawing enemy -- 
+        
+        float screenX = centreX + (hero.x * 20.0f);
+        float screenY = centreY + (hero.y * 20.0f);
+        playerSprite.setPosition(screenX, screenY);
+        
+        window.draw(playerSprite);
+        window.display();
+
+        // -- counters --
         roundCounter += 0.0166f; // +1 on every passing 1 second (loop runs 60 times a second)
+        fireCounter += 0.0166f; // +1 on every second of the game loop
+        fenceCoolDown += 0.0166f; // same thing as others
 
     }
     
