@@ -40,6 +40,7 @@ int main() {
     float roundCounter = 0.0f; // counts every 1/60 of a second and keeps track of time passing
     float fenceCoolDown = 0.0f; 
     float fireCounter = 0.0f;
+    float enemySpawnCounter = 0.0f;
 
 
     Plant SuccessPlant(100); //created the plant with 100 health
@@ -89,8 +90,6 @@ int main() {
 
 
                 sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
-
-                
                 
                 float dx = ((mousePosition.x - centreX)/20.0f) - hero.x;
                 float dy = ((mousePosition.y - centreY)/20.0f) - hero.y;
@@ -116,10 +115,14 @@ int main() {
         }
 
 
-        // -- spawming enemy
+        // -- spawming enemy --
 
-        if ((rand() % 100) < spawnRate) { //spawn rate
+
+        if(enemySpawnCounter > 1){
+            if ((rand() % 100) < spawnRate) { //spawn rate
             enemies.push_back(Enemy::spawn());
+            }
+            enemySpawnCounter = 0.0f;
         }
 
 
@@ -238,7 +241,7 @@ int main() {
         roundCounter += 0.0166f; // +1 on every passing 1 second (loop runs 60 times a second)
         fireCounter += 0.0166f; // +1 on every second of the game loop
         fenceCoolDown += 0.0166f; // same thing as others
-
+        enemySpawnCounter += 0.0166f;
     }
     
 

@@ -2,10 +2,10 @@
 
 struct Bullet {
 
-    float startX;
-    float startY;
     float x;
     float y;
+    float dx;
+    float dy;
     float damage;
     bool active;
     float fireRate;
