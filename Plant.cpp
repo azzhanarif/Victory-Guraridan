@@ -30,3 +30,4 @@ bool Plant::isDead() const { return currentHealth <= 0; }
 std::string Plant::getStatus() const {
     return "Health: " + std::to_string(currentHealth) + " | Growth: " + std::to_string(growthPct) + "%";
 }
+

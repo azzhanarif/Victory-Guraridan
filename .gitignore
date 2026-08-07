@@ -2,6 +2,13 @@
 build/
 .vscode/
 .Victory-Guraridan/
-.x64/Debug.
 
+x64/
+Debug/
+Release/
+*.user
+*.db
+*.opendb
 
+*.lib
+*.dll

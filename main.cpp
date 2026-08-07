@@ -43,7 +43,7 @@ int main() {
     float enemySpawnCounter = 0.0f;
 
 
-    Plant SuccessPlant(100); //created the plant with 100 health
+    Plant SuccessPlant(100, 0.0f, 0.0f); 
 
     float centreX = window.getSize().x /2.0f;
     float centreY = window.getSize().y /2.0f;
@@ -149,14 +149,45 @@ int main() {
         }
 
 
-        // -- updating the enemy --
+        // -- updating the enemy --   // love u pair ye dekhli
+        //for (int i = 0; i < enemies.size(); i++) {
+        //    enemies[i].update();
+        //}
+
+        //SuccessPlant.updateGrowth(); // Update the growth of the plant
+        //std::cout << "Plant Status: " << SuccessPlant.getStatus() << std::endl;
+        // -- updating the enemy AND fence collision --
         for (int i = 0; i < enemies.size(); i++) {
+            if (!enemies[i].alive) continue;
+
+            // 1. Enemy takes its normal step forward
             enemies[i].update();
+
+            // 2. Check if that step bumped into a fence
+            for (int j = 0; j < fences.size(); j++) {
+                if (fences[j].isDestroyed()) continue;
+
+                // Calculate distance between enemy and fence
+                float disX = enemies[i].x - fences[j].getX();
+                float disY = enemies[i].y - fences[j].getY();
+                float disSq = (disX * disX) + (disY * disY);
+
+                // If they are colliding (using 1.5f as the collision threshold)
+                if (disSq < 1.5f) {
+
+                    // The fence takes 1 damage per frame (at 60 FPS, this is 60 damage per second)
+                    fences[j].takeDamage(1);
+
+                    // Push the enemy backwards slightly so they don't phase through the fence.
+                    // This creates a "stuck attacking" effect until the fence breaks!
+                    float dis = std::sqrt(disSq);
+                    enemies[i].x += (disX / dis) * 0.1f;
+                    enemies[i].y += (disY / dis) * 0.1f;
+
+                    break; // The enemy can only attack one fence at a time
+                }
+            }
         }
-
-        SuccessPlant.updateGrowth(); // Update the growth of the plant
-        std::cout << "Plant Status: " << SuccessPlant.getStatus() << std::endl;
-
 
 
         // -- bullets hitting the enemy logic --
@@ -203,6 +234,35 @@ int main() {
         //=============================================
 
         window.clear(sf::Color::Black);
+
+        // -- Drawing the Plant --
+        // (Draw this first so it sits under the player and enemies)
+        sf::CircleShape plantSprite(15.0f);
+        plantSprite.setFillColor(sf::Color::Cyan);
+        plantSprite.setOrigin(15.0f, 15.0f);
+
+        float pScreenX = centreX + (SuccessPlant.getX() * 20.0f);
+        float pScreenY = centreY + (SuccessPlant.getY() * 20.0f);
+        plantSprite.setPosition(pScreenX, pScreenY);
+
+        // Optional: Make it pulse or grow! (Requires adding a getGrowth() function to Plant.h)
+        window.draw(plantSprite);
+
+
+        // -- Drawing Fences --
+// -- Drawing Fences --
+        sf::RectangleShape fenceSprite(sf::Vector2f(20.0f, 5.0f)); // Wide and short like a barricade
+        fenceSprite.setFillColor(sf::Color(139, 69, 19)); // Brown color
+        fenceSprite.setOrigin(10.0f, 2.5f);
+
+        for (int i = 0; i < fences.size(); i++) {
+            // USING .getX() and .getY() INSTEAD OF .x and .y
+            float fScreenX = centreX + (fences[i].getX() * 20.0f);
+            float fScreenY = centreY + (fences[i].getY() * 20.0f);
+
+            fenceSprite.setPosition(fScreenX, fScreenY);
+            window.draw(fenceSprite);
+        }
 
         // --  Drawing Enemy --
 
